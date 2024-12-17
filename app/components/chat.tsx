@@ -32,7 +32,7 @@ import EditIcon from "../icons/rename.svg";
 import ConfirmIcon from "../icons/confirm.svg";
 import CloseIcon from "../icons/close.svg";
 import CancelIcon from "../icons/cancel.svg";
-import ImageIcon from "../icons/image.svg";
+import UploadIcon from "../icons/upload.svg";
 
 import LightIcon from "../icons/light.svg";
 import DarkIcon from "../icons/dark.svg";
@@ -69,7 +69,10 @@ import {
   getMessageTextContent,
   getMessageImages,
   isVisionModel,
+  getFileTypeFromUrl,
+  getIconForFileType,
   isDalle3,
+  isMultiModel,
   showPlugins,
   safeLocalStorage,
 } from "../utils";
@@ -584,7 +587,7 @@ export function ChatActions(props: {
           <ChatAction
             onClick={props.uploadImage}
             text={Locale.Chat.InputActions.UploadImage}
-            icon={props.uploading ? <LoadingButtonIcon /> : <ImageIcon />}
+            icon={props.uploading ? <LoadingButtonIcon /> : <UploadIcon />}
           />
         )}
         <ChatAction
@@ -1507,9 +1510,14 @@ function _Chat() {
     images.push(
       ...(await new Promise<string[]>((res, rej) => {
         const fileInput = document.createElement("input");
+        const currentModel = chatStore.currentSession().mask.modelConfig.model;
         fileInput.type = "file";
-        fileInput.accept =
-          "image/png, image/jpeg, image/webp, image/heic, image/heif";
+        if (isMultiModel(currentModel)) {
+          fileInput.accept = "*/*";
+        } else {
+          fileInput.accept =
+            "image/png, image/jpeg, image/webp, image/heic, image/heif";
+        }
         fileInput.multiple = true;
         fileInput.onchange = (event: any) => {
           setUploading(true);
@@ -2015,12 +2023,20 @@ function _Chat() {
                 />
                 {attachImages.length != 0 && (
                   <div className={styles["attach-images"]}>
-                    {attachImages.map((image, index) => {
+                    {attachImages.map((file, index) => {
+                      const fileType = getFileTypeFromUrl(file); // 根据链接获取文件类型
+                      const isImage = fileType === "image";
+                      const backgroundStyle = {
+                        backgroundImage: `url("${
+                          isImage ? file : getIconForFileType(fileType)
+                        }")`,
+                      };
+
                       return (
                         <div
                           key={index}
                           className={styles["attach-image"]}
-                          style={{ backgroundImage: `url("${image}")` }}
+                          style={backgroundStyle}
                         >
                           <div className={styles["attach-image-mask"]}>
                             <DeleteImageButton

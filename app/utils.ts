@@ -245,10 +245,59 @@ export function getMessageImages(message: RequestMessage): string[] {
   const urls: string[] = [];
   for (const c of message.content) {
     if (c.type === "image_url") {
-      urls.push(c.image_url?.url ?? "");
+      if (c.image_url) {
+        const fileType = getFileTypeFromUrl(c.image_url?.url ?? "");
+        const isImage = fileType === "image";
+        if (isImage) {
+          urls.push(c.image_url?.url ?? "");
+        } else {
+          urls.push(getIconForFileType(fileType));
+        }
+      } else {
+        urls.push("");
+      }
     }
   }
   return urls;
+}
+
+// 根据链接后缀名返回文件类型
+export function getFileTypeFromUrl(fileUrl: string): string {
+  const extension = fileUrl.split(".").pop()?.toLowerCase() || "";
+
+  if (["jpg", "jpeg", "png", "gif", "bmp", "webp"].includes(extension)) {
+    return "image";
+  } else if (extension === "pdf") {
+    return "pdf";
+  } else if (["txt", "md"].includes(extension)) {
+    return "text";
+  } else if (["doc", "docx"].includes(extension)) {
+    return "word";
+  } else if (["xls", "xlsx"].includes(extension)) {
+    return "excel";
+  } else if (["ppt", "pptx"].includes(extension)) {
+    return "ppt";
+  } else {
+    return "file";
+  }
+}
+
+// 根据文件类型返回相应的图标路径
+export function getIconForFileType(fileType: string) {
+  switch (fileType) {
+    case "pdf":
+      return "../Pdf.svg"; // 替换为实际的PDF图标路径
+    case "text":
+      return "../TEXT.svg"; // 替换为实际的文本文件图标路径
+    case "word":
+      return "../word.svg"; // 替换为实际的Word图标路径
+    case "excel":
+      return "../EXCEL.svg"; // 替换为实际的Excel图标路径
+    case "ppt":
+      return "../PPT.svg"; // 替换为实际的PPT图标路径
+    default:
+      return "../file.svg"; // 替换为实际的通用文件图标路径
+  }
 }
 
 export function isVisionModel(model: string) {
@@ -273,6 +322,19 @@ export function isVisionModel(model: string) {
     (visionKeywords.some((keyword) => model.includes(keyword)) ||
       isGpt4Turbo ||
       isDalle3(model))
+  );
+}
+
+export function isMultiModel(model: string) {
+  const multiKeywords = ["vision", "gpt-4o", "gpt-4o-mini"];
+  const isGpt4Turbo =
+    model.includes("gpt-4-turbo") && !model.includes("preview");
+  const isGemini = model.includes("gemini-");
+
+  return (
+    multiKeywords.some((keyword) => model.includes(keyword)) ||
+    isGpt4Turbo ||
+    isGemini
   );
 }
 

@@ -96,17 +96,31 @@ const imageCaches: Record<string, string> = {};
 export function cacheImageToBase64Image(imageUrl: string) {
   if (imageUrl.includes(CACHE_URL_PREFIX)) {
     if (!imageCaches[imageUrl]) {
-      const reader = new FileReader();
       return fetch(imageUrl, {
         method: "GET",
         mode: "cors",
         credentials: "include",
       })
         .then((res) => res.blob())
-        .then(
-          async (blob) =>
-            (imageCaches[imageUrl] = await compressImage(blob, 256 * 1024)),
-        ); // compressImage
+        .then(async (blob) => {
+          const fileType = blob.type.split("/")[0];
+
+          // 如果是图片文件，继续使用 compressImage
+          if (fileType === "image") {
+            imageCaches[imageUrl] = await compressImage(blob, 256 * 1024);
+          } else {
+            // 其他文件类型，直接转换为 Base64 并缓存
+            const reader = new FileReader();
+            const base64Data = await new Promise<string>((resolve, reject) => {
+              reader.onloadend = () => resolve(reader.result as string);
+              reader.onerror = reject;
+              reader.readAsDataURL(blob);
+            });
+            imageCaches[imageUrl] = base64Data;
+          }
+
+          return imageCaches[imageUrl];
+        });
     }
     return Promise.resolve(imageCaches[imageUrl]);
   }
