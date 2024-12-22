@@ -2,7 +2,7 @@
 NeatChat是NextChat的去广告版本，使用NextChat的UI，并移除了广告。
 更改了配色，去除了多语言支持，只保留中文和英文，只为精简。
 
-详细使用请参考[NextChat](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web)
+
 
 > [演示站](https://neat.tz889.us.kg)
 
@@ -33,6 +33,104 @@ NeatChat是NextChat的去广告版本，使用NextChat的UI，并移除了广告
 
 2. docker只需要替换官方**yidadaa/chatgpt-next-web:版本号**为**tianzhentech/chatgpt-next-web:latest**即可
 
+> 详细使用请参考[NextChat](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web)
+## 开发计划
+
+<table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; table-layout: fixed;">
+  <tr>
+    <th style="text-align: center; padding: 8px; border: 1px solid #ddd; width: 60px; min-width: 60px; white-space: nowrap;">序号</th>
+    <th style="text-align: left; padding: 8px; border: 1px solid #ddd;">详情</th>
+    <th style="text-align: center; padding: 8px; border: 1px solid #ddd; width: 80px; min-width: 80px; white-space: nowrap;">优先级</th>
+    <th style="text-align: center; padding: 8px; border: 1px solid #ddd; width: 100px; min-width: 100px; white-space: nowrap;">预计时间</th>
+    <th style="text-align: center; padding: 8px; border: 1px solid #ddd; width: 80px; min-width: 80px; white-space: nowrap;">状态</th>
+  </tr>
+  <tr>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">1</td>
+    <td style="padding: 8px; border: 1px solid #ddd;">去除广告，精简语言包，调整UI，适配更多视觉模型</td>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">次级</td>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">2-3天</td>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">已完成</td>
+  </tr>
+  <tr>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">2</td>
+    <td style="padding: 8px; border: 1px solid #ddd;">全平台打包（Windows、Mac、Linux、Android、iOS）</td>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">次级</td>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">1天</td>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">进行中</td>
+  </tr>
+  <tr>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">3</td>
+    <td style="padding: 8px; border: 1px solid #ddd;">开启preview分支，提前体验新功能，preview分支会定期合并到main分支</td>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">次级</td>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">1天</td>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">即将开启</td>
+  </tr>
+  <tr>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">4</td>
+    <td style="padding: 8px; border: 1px solid #ddd;">增加多彩主题（支持启动时或者启动后切换基本色）</td>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">积极</td>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">3天</td>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">即将开启</td>
+  </tr>
+  <tr>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">5</td>
+    <td style="padding: 8px; border: 1px solid #ddd;">增加Neat模式（改善在移动设备上的使用体验）</td>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">次级</td>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">2天</td>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">计划中</td>
+  </tr>
+  <tr>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">6</td>
+    <td style="padding: 8px; border: 1px solid #ddd;">开启mini分支，去除面具，实时语音等不常用功能</td>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">次级</td>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">2天</td>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">计划中</td>
+  </tr>
+  <tr>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">7</td>
+    <td style="padding: 8px; border: 1px solid #ddd;">改进聊天记录同步功能</td>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">次级</td>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">2-3天</td>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">计划中</td>
+  </tr>
+  <tr>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">8</td>
+    <td style="padding: 8px; border: 1px solid #ddd;">优化本地消息过多导致的流式变慢问题</td>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">次级</td>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">2-3天</td>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">计划中</td>
+  </tr>
+  <tr>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">9</td>
+    <td style="padding: 8px; border: 1px solid #ddd;">增加上传文件功能，改进由于发送文本过长导致的输入框卡顿问题</td>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">次级</td>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">2-3天</td>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">计划中</td>
+  </tr>
+  <tr>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">......</td>
+    <td style="padding: 8px; border: 1px solid #ddd;">各位朋友们的建议</td>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">......</td>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">......</td>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">......</td>
+  </tr>
+</table>
+
+## 多彩基本色预览
+
+### 硅基紫
+![](https://raw.githubusercontent.com/tianzhentech/static/main/images/%7B37E636D3-3979-4EEA-AA0A-E0BBFC0F9011%7D.png)
+### 金色
+![](https://raw.githubusercontent.com/tianzhentech/static/main/images/%7B1480B42B-F15C-4E1A-BA4F-293E01AEE82E%7D.png)
+### 粉色
+![](https://raw.githubusercontent.com/tianzhentech/static/main/images/%7B5AB5B0F2-C040-461D-98C9-0762DC330EE5%7D.png)
+
+> 等等，包括favicon都将保持与基本色一致
+
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=tianzhentech/ChatGPT-Next-Web&type=Date)](https://star-history.com/#tianzhentech/ChatGPT-Next-Web&Date)
+<div style="width: 100%;">
+  <a href="https://star-history.com/#tianzhentech/ChatGPT-Next-Web&Date">
+    <img src="https://api.star-history.com/svg?repos=tianzhentech/ChatGPT-Next-Web&type=Date" style="width: 100%; height: auto;">
+  </a>
+</div>
