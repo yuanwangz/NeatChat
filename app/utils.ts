@@ -246,13 +246,15 @@ export function getMessageImages(message: RequestMessage): string[] {
   for (const c of message.content) {
     if (c.type === "image_url") {
       if (c.image_url) {
-        const fileType = getFileTypeFromUrl(c.image_url?.url ?? "");
-        const isImage = fileType === "image";
-        if (isImage) {
-          urls.push(c.image_url?.url ?? "");
-        } else {
-          urls.push(getIconForFileType(fileType));
-        }
+        console.log(c.image_url?.url);
+        urls.push(c.image_url?.url ?? "");
+        // const fileType = getFileTypeFromUrl(c.image_url?.url ?? "");
+        // const isImage = fileType === "image";
+        // if (isImage) {
+        //   urls.push(c.image_url?.url ?? "");
+        // } else {
+        //   urls.push(getIconForFileType(fileType));
+        // }
       } else {
         urls.push("");
       }
@@ -262,9 +264,11 @@ export function getMessageImages(message: RequestMessage): string[] {
 }
 
 // 根据链接后缀名返回文件类型
-export function getFileTypeFromUrl(fileUrl: string): string {
+export function getFileTypeFromUrl(file: string): string {
+  console.log(file);
+  const fileUrl = JSON.parse(file).url;
   const extension = fileUrl.split(".").pop()?.toLowerCase() || "";
-
+  console.log(extension);
   if (["jpg", "jpeg", "png", "gif", "bmp", "webp"].includes(extension)) {
     return "image";
   } else if (extension === "pdf") {
@@ -308,8 +312,7 @@ export function isVisionModel(model: string) {
     "vision",
     "gpt-4o",
     "claude-3",
-    "gemini-1.5",
-    "gemini-exp",
+    "gemini-",
     "learnlm",
     "qwen-vl",
     "qwen2-vl",
@@ -326,15 +329,18 @@ export function isVisionModel(model: string) {
 }
 
 export function isMultiModel(model: string) {
-  const multiKeywords = ["vision", "gpt-4o", "gpt-4o-mini"];
+  const multiKeywords = [
+    "vision",
+    "gpt-4o",
+    "gpt-4o-mini",
+    "claude-3",
+    "gemini-",
+  ];
   const isGpt4Turbo =
     model.includes("gpt-4-turbo") && !model.includes("preview");
-  const isGemini = model.includes("gemini-");
 
   return (
-    multiKeywords.some((keyword) => model.includes(keyword)) ||
-    isGpt4Turbo ||
-    isGemini
+    multiKeywords.some((keyword) => model.includes(keyword)) || isGpt4Turbo
   );
 }
 

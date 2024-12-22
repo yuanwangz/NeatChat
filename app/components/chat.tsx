@@ -70,7 +70,6 @@ import {
   getMessageImages,
   isVisionModel,
   getFileTypeFromUrl,
-  getIconForFileType,
   isDalle3,
   isMultiModel,
   showPlugins,
@@ -134,6 +133,14 @@ const ttsPlayer = createTTSPlayer();
 const Markdown = dynamic(async () => (await import("./markdown")).Markdown, {
   loading: () => <LoadingIcon />,
 });
+
+function DeleteImageButton(props: { deleteImage: () => void }) {
+  return (
+    <div className={styles["delete-image"]} onClick={props.deleteImage}>
+      <DeleteIcon />
+    </div>
+  );
+}
 
 export function SessionConfigModel(props: { onClose: () => void }) {
   const chatStore = useChatStore();
@@ -872,14 +879,6 @@ export function EditMessageModal(props: { onClose: () => void }) {
   );
 }
 
-export function DeleteImageButton(props: { deleteImage: () => void }) {
-  return (
-    <div className={styles["delete-image"]} onClick={props.deleteImage}>
-      <DeleteIcon />
-    </div>
-  );
-}
-
 export function ShortcutKeyModal(props: { onClose: () => void }) {
   const isMac = navigator.platform.toUpperCase().indexOf("MAC") >= 0;
   const shortcuts = [
@@ -1527,7 +1526,12 @@ function _Chat() {
             const file = event.target.files[i];
             uploadImageRemote(file)
               .then((dataUrl) => {
-                imagesData.push(dataUrl);
+                // 在这添加文件名信息
+                const fileInfo = {
+                  url: dataUrl,
+                  name: file.name, // 保存原始文件名
+                };
+                imagesData.push(JSON.stringify(fileInfo));
                 if (
                   imagesData.length === 3 ||
                   imagesData.length === files.length
@@ -1570,7 +1574,7 @@ function _Chat() {
           navigate(Path.Chat);
         }, 10);
       }
-      // 聚焦聊天输入 shift + esc
+      // 聚焦��天输入 shift + esc
       else if (event.shiftKey && event.key.toLowerCase() === "escape") {
         event.preventDefault();
         inputRef.current?.focus();
@@ -1907,7 +1911,6 @@ function _Chat() {
                               message.content.length === 0 &&
                               !isUser
                             }
-                            //   onContextMenu={(e) => onRightClick(e, message)} // hard to use
                             onDoubleClickCapture={() => {
                               if (!isMobileScreen) return;
                               setUserInput(getMessageTextContent(message));
@@ -1917,37 +1920,83 @@ function _Chat() {
                             parentRef={scrollRef}
                             defaultShow={i >= messages.length - 6}
                           />
-                          {getMessageImages(message).length == 1 && (
-                            <img
-                              className={styles["chat-message-item-image"]}
-                              src={getMessageImages(message)[0]}
-                              alt=""
-                            />
-                          )}
-                          {getMessageImages(message).length > 1 && (
-                            <div
-                              className={styles["chat-message-item-images"]}
-                              style={
-                                {
-                                  "--image-count":
-                                    getMessageImages(message).length,
-                                } as React.CSSProperties
-                              }
-                            >
-                              {getMessageImages(message).map((image, index) => {
-                                return (
-                                  <img
-                                    className={
-                                      styles["chat-message-item-image-multi"]
+
+                          {/* 图片展示 */}
+                          {Array.isArray(message.content) &&
+                            message.content.filter(
+                              (item: any) =>
+                                item.type === "image_url" &&
+                                item.image_url?.url &&
+                                !item.image_url.url.includes('{"url"'),
+                            ).length > 0 && (
+                              <div
+                                className={styles["chat-message-item-images"]}
+                              >
+                                {message.content
+                                  .filter(
+                                    (item: any) =>
+                                      item.type === "image_url" &&
+                                      item.image_url?.url &&
+                                      !item.image_url.url.includes('{"url"'),
+                                  )
+                                  .map((item: any, index: number) => (
+                                    <img
+                                      key={index}
+                                      className={
+                                        styles["chat-message-item-image"]
+                                      }
+                                      src={item.image_url.url}
+                                      alt=""
+                                    />
+                                  ))}
+                              </div>
+                            )}
+
+                          {/* 文件列表展示 */}
+                          {Array.isArray(message.content) &&
+                            message.content.filter(
+                              (item: any) =>
+                                item.type === "image_url" &&
+                                item.image_url?.url &&
+                                item.image_url.url.includes('{"url"'),
+                            ).length > 0 && (
+                              <div className={styles["chat-message-files"]}>
+                                {message.content
+                                  .filter(
+                                    (item: any) =>
+                                      item.type === "image_url" &&
+                                      item.image_url?.url &&
+                                      item.image_url.url.includes('{"url"'),
+                                  )
+                                  .map((item: any, index: number) => {
+                                    try {
+                                      const fileInfo = JSON.parse(
+                                        item.image_url.url,
+                                      );
+                                      return (
+                                        <div
+                                          key={index}
+                                          className={
+                                            styles["chat-message-file"]
+                                          }
+                                        >
+                                          <a
+                                            href={fileInfo.url}
+                                            download={fileInfo.name}
+                                            className={
+                                              styles["chat-message-file-name"]
+                                            }
+                                          >
+                                            {fileInfo.name}
+                                          </a>
+                                        </div>
+                                      );
+                                    } catch {
+                                      return null;
                                     }
-                                    key={index}
-                                    src={image}
-                                    alt=""
-                                  />
-                                );
-                              })}
-                            </div>
-                          )}
+                                  })}
+                              </div>
+                            )}
                         </div>
                         {message?.audio_url && (
                           <div className={styles["chat-message-audio"]}>
@@ -2022,34 +2071,75 @@ function _Chat() {
                   }}
                 />
                 {attachImages.length != 0 && (
-                  <div className={styles["attach-images"]}>
-                    {attachImages.map((file, index) => {
-                      const fileType = getFileTypeFromUrl(file); // 根据链接获取文件类型
-                      const isImage = fileType === "image";
-                      const backgroundStyle = {
-                        backgroundImage: `url("${
-                          isImage ? file : getIconForFileType(fileType)
-                        }")`,
-                      };
-
-                      return (
+                  <div className={styles["attach-files"]}>
+                    {attachImages
+                      .filter((file) => getFileTypeFromUrl(file) === "image")
+                      .map((file, index) => (
                         <div
                           key={index}
                           className={styles["attach-image"]}
-                          style={backgroundStyle}
+                          style={{
+                            backgroundImage: `url("${JSON.parse(file).url}")`,
+                          }}
                         >
                           <div className={styles["attach-image-mask"]}>
                             <DeleteImageButton
                               deleteImage={() => {
                                 setAttachImages(
-                                  attachImages.filter((_, i) => i !== index),
+                                  attachImages.filter(
+                                    (_, i) =>
+                                      attachImages.findIndex(
+                                        (f) => f === file,
+                                      ) !== i,
+                                  ),
                                 );
                               }}
                             />
                           </div>
                         </div>
-                      );
-                    })}
+                      ))}
+                    {attachImages
+                      .filter((file) => getFileTypeFromUrl(file) !== "image")
+                      .map((file, index) => {
+                        let fileName;
+                        let fileUrl;
+                        try {
+                          const fileInfo = JSON.parse(file);
+                          fileName = fileInfo.name;
+                          fileUrl = fileInfo.url;
+                        } catch {
+                          const decodedUrl = decodeURIComponent(file);
+                          const urlWithoutParams = decodedUrl.split("?")[0];
+                          fileName =
+                            urlWithoutParams.split("/").pop() || "unknown";
+                          fileUrl = file;
+                        }
+
+                        return (
+                          <div
+                            key={index}
+                            className={styles["attach-file-item"]}
+                          >
+                            <a
+                              className={styles["attach-file-name"]}
+                              href={fileUrl}
+                              download={fileName}
+                            >
+                              {fileName}
+                            </a>
+                            <span
+                              className={styles["attach-file-delete"]}
+                              onClick={() => {
+                                setAttachImages(
+                                  attachImages.filter((f) => f !== file), // 直接比较原始字符串
+                                );
+                              }}
+                            >
+                              ×
+                            </span>
+                          </div>
+                        );
+                      })}
                   </div>
                 )}
                 <IconButton
