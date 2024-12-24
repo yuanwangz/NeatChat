@@ -93,7 +93,8 @@ export async function preProcessImageContent(
 }
 
 const imageCaches: Record<string, string> = {};
-export function cacheImageToBase64Image(imageUrl: string) {
+export function cacheImageToBase64Image(imageUrlObj: string) {
+  const imageUrl = JSON.parse(imageUrlObj).url;
   if (imageUrl.includes(CACHE_URL_PREFIX)) {
     if (!imageCaches[imageUrl]) {
       return fetch(imageUrl, {
