@@ -582,6 +582,8 @@ const cn = {
         SubTitle: "值越大，回复越随机",
       },
     },
+    EnableModelSearch: "启用模型搜索",
+    EnableModelSearchSubTitle: "启用之后可以在选择模型时搜索过滤",
   },
   Store: {
     DefaultTopic: "新的聊天",

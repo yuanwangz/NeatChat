@@ -1577,16 +1577,30 @@ export function Settings() {
             subTitle={Locale.Mask.Config.CodeFold.SubTitle}
           >
             <input
-              aria-label={Locale.Mask.Config.CodeFold.Title}
               type="checkbox"
               checked={config.enableCodeFold}
-              data-testid="enable-code-fold-checkbox"
               onChange={(e) =>
                 updateConfig(
                   (config) => (config.enableCodeFold = e.currentTarget.checked),
                 )
               }
-            ></input>
+            />
+          </ListItem>
+
+          <ListItem
+            title={Locale.Settings.EnableModelSearch}
+            subTitle={Locale.Settings.EnableModelSearchSubTitle}
+          >
+            <input
+              type="checkbox"
+              checked={config.enableModelSearch}
+              onChange={(e) =>
+                updateConfig(
+                  (config) =>
+                    (config.enableModelSearch = e.currentTarget.checked),
+                )
+              }
+            />
           </ListItem>
         </List>
 

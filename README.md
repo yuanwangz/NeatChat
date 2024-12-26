@@ -6,7 +6,7 @@ NeatChat是NextChat的去广告版本，使用NextChat的UI，并移除了广告
 
 > [演示站](https://neat.tz889.us.kg)
 
-## 新旧对比
+# 新旧对比
 
 <table style="border-collapse: collapse; border: 0.2px solid #ddd; width: 100%;">
   <tr>
@@ -28,13 +28,14 @@ NeatChat是NextChat的去广告版本，使用NextChat的UI，并移除了广告
 </table>
 
 
-## 快速开始
+# 快速开始
 1. 支持vercel一键部署：[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/tianzhentech/NeatChat.git)
 
 2. docker只需要替换官方**yidadaa/chatgpt-next-web:版本号**为**tianzhentech/chatgpt-next-web:latest**即可
 
 > 详细使用请参考[NextChat](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web)
-## 开发计划
+# 开发计划
+> 以下不分先后顺序
 
 <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; table-layout: fixed;">
   <tr>
@@ -53,17 +54,17 @@ NeatChat是NextChat的去广告版本，使用NextChat的UI，并移除了广告
   </tr>
   <tr>
     <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">2</td>
-    <td style="padding: 8px; border: 1px solid #ddd;">全平台打包（Windows、Mac、Linux、Android、iOS）</td>
+    <td style="padding: 8px; border: 1px solid #ddd;">全平台打包（Windows、Mac、Linux、Android、iOS、Docker）</td>
     <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">次级</td>
     <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">1天</td>
-    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">进行中</td>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">暂时搁置中，只打包了windows和docker，其余暂时可以用pwa替代</td>
   </tr>
   <tr>
     <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">3</td>
     <td style="padding: 8px; border: 1px solid #ddd;">开启preview分支，提前体验新功能，preview分支会定期合并到main分支</td>
     <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">次级</td>
     <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">1天</td>
-    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">即将开启</td>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">已完成</td>
   </tr>
   <tr>
     <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">4</td>
@@ -108,6 +109,13 @@ NeatChat是NextChat的去广告版本，使用NextChat的UI，并移除了广告
     <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">计划中</td>
   </tr>
   <tr>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">10</td>
+    <td style="padding: 8px; border: 1px solid #ddd;">新增对多种模型avatar的适配</td>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">积极</td>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">2-3天</td>
+    <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">已完成</td>
+  </tr>
+  <tr>
     <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">......</td>
     <td style="padding: 8px; border: 1px solid #ddd;">各位朋友们的建议</td>
     <td style="text-align: center; padding: 8px; border: 1px solid #ddd;">......</td>
@@ -116,17 +124,21 @@ NeatChat是NextChat的去广告版本，使用NextChat的UI，并移除了广告
   </tr>
 </table>
 
-## 多彩基本色预览
+# 多彩基本色预览
 
-### 硅基紫
+## 硅基紫
 ![](https://raw.githubusercontent.com/tianzhentech/static/main/images/%7B37E636D3-3979-4EEA-AA0A-E0BBFC0F9011%7D.png)
-### 金色
+## 金色
 ![](https://raw.githubusercontent.com/tianzhentech/static/main/images/%7B1480B42B-F15C-4E1A-BA4F-293E01AEE82E%7D.png)
-### 粉色
+## 粉色
 ![](https://raw.githubusercontent.com/tianzhentech/static/main/images/%7B5AB5B0F2-C040-461D-98C9-0762DC330EE5%7D.png)
 
 > 等等，包括favicon都将保持与基本色一致
+# preview分支开启
+自1.1.5版本开始，从main分支分裂出去一个单独的preview分支，preview分支会定期合并到main分支，大家可以在preview分支体验到最新的功能，但是preview分支不会进行打包，只会打包main分支，不过会打包docker，所以大家如果想要体验最新功能，请自行编译。
 
+# mini分支开启
+自1.1.4版本开始，从main分支分裂出去一个单独的mini分支，main分支后续大部分非实用功能都不会在mini分支适配，mini分支将紧跟nextchat官方更新，而且后续面具，实时语音等等也将剔除。
 ## Star History
 
 <div style="width: 100%;">

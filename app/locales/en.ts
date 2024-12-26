@@ -589,6 +589,9 @@ const en: LocaleType = {
         SubTitle: "Higher values result in more random responses",
       },
     },
+    EnableModelSearch: "Enable Model Search",
+    EnableModelSearchSubTitle:
+      "Enable to search and filter when selecting models",
   },
   Store: {
     DefaultTopic: "New Conversation",

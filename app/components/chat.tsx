@@ -96,6 +96,7 @@ import {
   showConfirm,
   showPrompt,
   showToast,
+  SimpleMultipleSelector,
 } from "./ui-lib";
 import { useNavigate } from "react-router-dom";
 import {
@@ -658,6 +659,7 @@ export function ChatActions(props: {
                   : ""
               }`,
               value: `${m.name}@${m?.provider?.providerName}`,
+              icon: <Avatar model={m.name} />,
             }))}
             onClose={() => setShowModelSelector(false)}
             onSelection={(s) => {
@@ -680,6 +682,7 @@ export function ChatActions(props: {
                 showToast(model);
               }
             }}
+            showSearch={config.enableModelSearch}
           />
         )}
 
@@ -707,6 +710,7 @@ export function ChatActions(props: {
               });
               showToast(size);
             }}
+            showSearch={config.enableModelSearch}
           />
         )}
 
@@ -734,6 +738,7 @@ export function ChatActions(props: {
               });
               showToast(quality);
             }}
+            showSearch={config.enableModelSearch}
           />
         )}
 
@@ -761,6 +766,7 @@ export function ChatActions(props: {
               });
               showToast(style);
             }}
+            showSearch={config.enableModelSearch}
           />
         )}
 
@@ -778,19 +784,19 @@ export function ChatActions(props: {
           />
         )}
         {showPluginSelector && (
-          <Selector
-            multiple
-            defaultSelectedValue={chatStore.currentSession().mask?.plugin}
+          <SimpleMultipleSelector
             items={pluginStore.getAll().map((item) => ({
               title: `${item?.title}@${item?.version}`,
               value: item?.id,
             }))}
+            defaultSelectedValue={chatStore.currentSession().mask?.plugin}
             onClose={() => setShowPluginSelector(false)}
             onSelection={(s) => {
               chatStore.updateTargetSession(session, (session) => {
-                session.mask.plugin = s as string[];
+                session.mask.plugin = s;
               });
             }}
+            showSearch={config.enableModelSearch}
           />
         )}
 

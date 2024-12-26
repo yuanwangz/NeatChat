@@ -5,7 +5,7 @@ require("../polyfill");
 import { useState, useEffect } from "react";
 import styles from "./home.module.scss";
 
-import BotIcon from "../icons/bot.svg";
+import IconImage from "../icons/icon.png";
 import LoadingIcon from "../icons/three-dots.svg";
 
 import { getCSSVar, useMobileScreen } from "../utils";
@@ -33,7 +33,9 @@ import clsx from "clsx";
 export function Loading(props: { noLogo?: boolean }) {
   return (
     <div className={clsx("no-dark", styles["loading-content"])}>
-      {!props.noLogo && <BotIcon />}
+      {!props.noLogo && (
+        <img src={IconImage.src} width={30} height={30} alt="Logo" />
+      )}
       <LoadingIcon />
     </div>
   );
