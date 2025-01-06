@@ -46,3 +46,6 @@ dev
 *.key.pub
 
 masks.json
+
+# Uploaded files
+/uploads

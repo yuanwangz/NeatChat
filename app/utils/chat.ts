@@ -11,6 +11,7 @@ import {
 } from "@fortaine/fetch-event-source";
 import { prettyObject } from "./format";
 import { fetch as tauriFetch } from "./stream";
+import { useAccessStore } from "../store/access";
 
 export function compressImage(file: Blob, maxSize: number): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -139,25 +140,43 @@ export function base64Image2Blob(base64Data: string, contentType: string) {
 }
 
 export function uploadImage(file: Blob): Promise<string> {
-  if (!window._SW_ENABLED) {
-    // if serviceWorker register error, using compressImage
-    return compressImage(file, 256 * 1024);
-  }
   const body = new FormData();
   body.append("file", file);
-  return fetch(UPLOAD_URL, {
+
+  // 从store中获取accessCode
+  const accessStore = useAccessStore.getState();
+  const accessCode = accessStore.accessCode;
+
+  // 尝试服务器端上传
+  return fetch("/api/uploads", {
     method: "post",
     body,
-    mode: "cors",
-    credentials: "include",
+    headers: {
+      Authorization: `Bearer ${accessCode}`,
+    },
   })
     .then((res) => res.json())
     .then((res) => {
-      // console.log("res", res);
-      if (res?.code == 0 && res?.data) {
-        return res?.data;
+      if (res?.code === 0 && res?.data) {
+        return res.data;
       }
-      throw Error(`upload Error: ${res?.msg}`);
+      // 如果服务器端上传失败或未启用，回退到客户端存储
+      if (!window._SW_ENABLED) {
+        return compressImage(file, 256 * 1024);
+      }
+      return fetch(UPLOAD_URL, {
+        method: "post",
+        body,
+        mode: "cors",
+        credentials: "include",
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          if (res?.code === 0 && res?.data) {
+            return res?.data;
+          }
+          throw Error(`upload Error: ${res?.msg}`);
+        });
     });
 }
 
