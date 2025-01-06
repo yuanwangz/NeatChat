@@ -11,6 +11,10 @@ const ACCESS_CODES = (process.env.CODE || "")
   .split(",")
   .map((code) => code.trim());
 
+// 新的配置方式
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
 export async function POST(req: NextRequest) {
   // 验证访问令牌
   const token = req.headers.get("Authorization")?.replace("Bearer ", "");
@@ -58,9 +62,3 @@ export async function POST(req: NextRequest) {
     );
   }
 }
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};

@@ -5,6 +5,10 @@ import { existsSync } from "fs";
 
 const UPLOAD_PATH = "./uploads"; // 固定上传目录
 
+// 新的配置方式
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
 export async function GET(
   req: NextRequest,
   { params }: { params: { path: string[] } },
@@ -64,9 +68,3 @@ export async function GET(
     );
   }
 }
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
