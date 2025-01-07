@@ -352,11 +352,13 @@ function SyncConfigModal(props: { onClose?: () => void }) {
                 );
               }}
             >
-              {Object.entries(ProviderType).map(([k, v]) => (
-                <option value={v} key={k}>
-                  {k}
-                </option>
-              ))}
+              {Object.entries(ProviderType)
+                .filter(([k]) => k !== "LocalDb")
+                .map(([k, v]) => (
+                  <option value={v} key={k}>
+                    {k}
+                  </option>
+                ))}
             </select>
           </ListItem>
 
@@ -485,9 +487,28 @@ function SyncItems() {
   const chatStore = useChatStore();
   const promptStore = usePromptStore();
   const maskStore = useMaskStore();
-  const couldSync = useMemo(() => {
-    return syncStore.cloudSync();
-  }, [syncStore]);
+  const accessStore = useAccessStore();
+
+  const [couldSync, setCouldSync] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
+
+  // 只在组件挂载和关键依赖变化时检查一次
+  useEffect(() => {
+    const checkSync = async () => {
+      const cloudSync = syncStore.cloudSync();
+      const localSync = await syncStore.shouldUseLocalDbSync();
+      setCouldSync(cloudSync || localSync);
+    };
+
+    checkSync();
+  }, [
+    // 只依赖真正会影响同步能力的状态
+    syncStore.provider,
+    syncStore.webdav,
+    syncStore.upstash,
+    accessStore.accessCode,
+    accessStore.openaiApiKey,
+  ]);
 
   const [showSyncConfigModal, setShowSyncConfigModal] = useState(false);
 
@@ -528,14 +549,18 @@ function SyncItems() {
             {couldSync && (
               <IconButton
                 icon={<ResetIcon />}
-                text={Locale.UI.Sync}
+                text={isSyncing ? "..." : Locale.UI.Sync}
+                disabled={isSyncing}
                 onClick={async () => {
                   try {
+                    setIsSyncing(true);
                     await syncStore.sync();
                     showToast(Locale.Settings.Sync.Success);
                   } catch (e) {
                     showToast(Locale.Settings.Sync.Fail);
                     console.error("[Sync]", e);
+                  } finally {
+                    setIsSyncing(false);
                   }
                 }}
               />
