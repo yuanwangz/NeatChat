@@ -16,25 +16,17 @@ import {
 import { downloadAs, readFromFile } from "../utils";
 import { showToast } from "../components/ui-lib";
 import Locale from "../locales";
-import { createSyncClient, ProviderType } from "../utils/cloud";
+import {
+  createSyncClient,
+  ProviderType,
+  type WebDavConfig,
+  type UpstashConfig,
+  type LocalDbConfig,
+} from "../utils/cloud";
 import { useAccessStore } from "./access";
 import { getHeaders } from "../client/api";
 
-export interface WebDavConfig {
-  endpoint: string;
-  username: string;
-  password: string;
-}
-
-export interface UpstashConfig {
-  endpoint: string;
-  username: string;
-  apiKey: string;
-}
-
-export interface LocalDbConfig {
-  accessCode: string;
-}
+export type { WebDavConfig, UpstashConfig, LocalDbConfig };
 
 interface SyncState {
   provider: ProviderType;

@@ -1,12 +1,21 @@
 import { createWebDavClient } from "./webdav";
 import { createUpstashClient } from "./upstash";
 import { createLocalDbClient } from "./localdb";
+import {
+  ProviderType,
+  SyncClient,
+  WebDavConfig,
+  UpstashConfig,
+  LocalDbConfig,
+} from "./types";
 
-export enum ProviderType {
-  WebDAV = "webdav",
-  UpStash = "upstash",
-  LocalDb = "localdb",
-}
+export {
+  ProviderType,
+  type SyncClient,
+  type WebDavConfig,
+  type UpstashConfig,
+  type LocalDbConfig,
+};
 
 export const SyncClients = {
   [ProviderType.UpStash]: createUpstashClient,
@@ -14,23 +23,20 @@ export const SyncClients = {
   [ProviderType.LocalDb]: createLocalDbClient,
 } as const;
 
-type SyncClientConfig = {
-  [K in keyof typeof SyncClients]: (typeof SyncClients)[K] extends (
-    _: infer C,
-  ) => any
-    ? C
-    : never;
+export type SyncClientConfig = {
+  [ProviderType.WebDAV]: WebDavConfig;
+  [ProviderType.UpStash]: UpstashConfig;
+  [ProviderType.LocalDb]: LocalDbConfig;
 };
 
-export type SyncClient = {
-  get: (key: string) => Promise<string>;
-  set: (key: string, value: string) => Promise<void>;
-  check: () => Promise<boolean>;
-};
-
-export function createSyncClient<T extends ProviderType>(
-  provider: T,
-  config: SyncClientConfig[T],
+export function createSyncClient(
+  provider: ProviderType,
+  config: WebDavConfig | UpstashConfig | LocalDbConfig,
 ): SyncClient {
-  return SyncClients[provider](config as any) as any;
+  const client = SyncClients[provider](config as any);
+  return {
+    get: async (key: string) => (await client.get(key)) || "",
+    set: client.set,
+    check: client.check,
+  };
 }
